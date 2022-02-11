@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_home"
+        android:enabled="true"
+        android:icon="@drawable/icon_home"
+        android:title="@string/navLabel_home"/>
+    <item
+        android:id="@+id/menu_fund_transfer"
+        android:enabled="true"
+        android:icon="@drawable/icon_fund_transfer"
+        android:title="@string/navLabel_fund_transfer"/>
+    <item
+        android:id="@+id/menu_history"
+        android:enabled="true"
+        android:icon="@drawable/icon_history"
+        android:title="@string/navLabel_history" />
+    <item
+        android:id="@+id/menu_pay_bills"
+        android:enabled="true"
+        android:icon="@drawable/icon_pay_bills"
+        android:title="@string/navLabel_payBills"/>
+    <item
+        android:id="@+id/menu_live_chat"
+        android:enabled="true"
+        android:icon="@drawable/icon_live_chat"
+        android:title="@string/navLabel_live_chat"/>
+</menu>

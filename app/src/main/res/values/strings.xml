@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">MobileBanking</string>
+    <string name="loginPage_login">Login</string>
+    <string name="navLabel_history">History</string>
+    <string name="navLabel_payBills">Pay Bills</string>
+    <string name="navLabel_fund_transfer">Fund Transfer</string>
+    <string name="navLabel_live_chat">Live Chat</string>
+    <string name="navLabel_home">Home</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
