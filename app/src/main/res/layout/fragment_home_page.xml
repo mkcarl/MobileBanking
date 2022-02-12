@@ -60,6 +60,7 @@
         app:layout_constraintVertical_bias="0.025" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycle_homeNews"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="1dp"
