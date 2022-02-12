@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -34,8 +35,19 @@ class FundTransfer1 : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_fund_transfer1, container, false)
+        val myView = inflater.inflate(R.layout.fragment_fund_transfer1, container, false)
+        val btnNext: Button = myView.findViewById(R.id.button_transfer1Next)
+
+        btnNext.setOnClickListener {
+            parentFragmentManager.beginTransaction().apply {
+                replace(R.id.linear_main, FundTransfer2())
+                commit()
+            }
+        }
+
+        return myView
     }
+
 
     companion object {
         /**

@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -34,7 +36,16 @@ class FundTransfer3 : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_fund_transfer3, container, false)
+        val myView = inflater.inflate(R.layout.fragment_fund_transfer3, container, false)
+        val mainView = inflater.inflate(R.layout.activity_main_page, container, false)
+        val btnDone: Button = myView.findViewById(R.id.button_transfer3Done)
+        btnDone.setOnClickListener {
+            val nav = activity?.findViewById<BottomNavigationView>(R.id.bottomNavigation_mainNav)
+//            nav?.menu?.findItem(R.id.menu_home)?.isChecked = true
+            nav?.selectedItemId = R.id.menu_home
+            nav?.performClick()
+        }
+        return myView
     }
 
     companion object {

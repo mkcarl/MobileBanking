@@ -9,22 +9,21 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="306dp"
-        android:layout_height="218dp"
+        android:layout_width="220dp"
+        android:layout_height="150dp"
         android:src="@drawable/icon_done_transfer"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.085" />
+        app:layout_constraintVertical_bias="0.06" />
 
     <TextView
         android:id="@+id/text_transfer3TransferSuccess"
         style="@style/TextAppearance.Material3.HeadlineLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:text="Successfully transferred RM500 to 123-123-123"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
@@ -38,7 +37,6 @@
         android:layout_height="wrap_content"
         android:text="Save as PDF"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/button_transfer3Done"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_transfer3Favourite" />
@@ -52,9 +50,10 @@
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_transfer3TransferSuccess"
-        app:layout_constraintVertical_bias="0.155" />
+        app:layout_constraintVertical_bias="0.097" />
 
     <Button
         android:id="@+id/button_transfer3Done"
@@ -65,5 +64,7 @@
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintHorizontal_bias="0.75"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_transfer3Pdf" />
 </androidx.constraintlayout.widget.ConstraintLayout>
