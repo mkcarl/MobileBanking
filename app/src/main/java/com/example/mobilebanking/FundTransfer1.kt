@@ -5,7 +5,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.Button
+import com.google.android.material.textfield.TextInputLayout
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -37,6 +40,7 @@ class FundTransfer1 : Fragment() {
         // Inflate the layout for this fragment
         val myView = inflater.inflate(R.layout.fragment_fund_transfer1, container, false)
         val btnNext: Button = myView.findViewById(R.id.button_transfer1Next)
+        val editBanks : TextInputLayout = myView.findViewById(R.id.editText_transfer1BankName)
 
         btnNext.setOnClickListener {
             parentFragmentManager.beginTransaction().apply {
@@ -44,6 +48,10 @@ class FundTransfer1 : Fragment() {
                 commit()
             }
         }
+
+        val banks = listOf<String>("Maybank", "Ambank", "CIMB Bank", "Bank Simpanan Nasional", "Bank of China", "HSBC Bank", "OCBC Bank")
+        val adapter = ArrayAdapter(requireContext(), R.layout.bank_list_item, banks.sorted())
+        (editBanks.editText as? AutoCompleteTextView)?.setAdapter(adapter)
 
         return myView
     }

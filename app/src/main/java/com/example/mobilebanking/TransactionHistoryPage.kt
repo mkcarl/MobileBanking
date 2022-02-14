@@ -5,6 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
+import com.example.mobilebanking.adapter.TransactionAdapter
+import com.example.mobilebanking.data.TransactionDatasource
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -34,7 +37,13 @@ class TransactionHistoryPage : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_transaction_history_page, container, false)
+        val myView = inflater.inflate(R.layout.fragment_transaction_history_page, container, false)
+
+        val recyclerTransaction : RecyclerView = myView.findViewById(R.id.recycle_historyHistory)
+        val transactions = TransactionDatasource().loadTransactions()
+        recyclerTransaction.adapter = TransactionAdapter(transactions)
+
+        return myView
     }
 
     companion object {

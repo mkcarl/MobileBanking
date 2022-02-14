@@ -1,11 +1,17 @@
 package com.example.mobilebanking
 
+import android.content.DialogInterface
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.RecyclerView
+import com.example.mobilebanking.adapter.NewsAdapter
+import com.example.mobilebanking.data.NewsDatasource
+import javax.sql.DataSource
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -38,10 +44,30 @@ class HomePage : Fragment() {
         // Inflate the layout for this fragment
         val myView = inflater.inflate(R.layout.fragment_home_page, container, false)
         val btnLogout:Button = myView.findViewById(R.id.button_homeLogOut)
+        val recyclerNews : RecyclerView = myView.findViewById(R.id.recycle_homeNews)
 
         btnLogout.setOnClickListener {
-            activity?.finish()
+            // https://stackoverflow.com/a/59935762
+            AlertDialog.Builder(requireContext())
+                .setTitle("Quit")
+                .setMessage("Are you sure you want to log out?")
+                .setCancelable(false)
+                .setPositiveButton("Yes") {
+                        dialog: DialogInterface, _: Int ->
+                    dialog.dismiss()
+                    // for sending data to previous activity use
+                    // setResult(response code, data)
+                    activity?.finish()
+                }
+                .setNegativeButton("No") {
+                        dialog: DialogInterface, _: Int ->
+                    dialog.dismiss()
+                }
+                .show()
         }
+
+        val news = NewsDatasource().loadNews()
+        recyclerNews.adapter = NewsAdapter(news)
 
         return myView
     }

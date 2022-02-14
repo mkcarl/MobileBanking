@@ -62,6 +62,7 @@ class MainPage : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
+        // https://stackoverflow.com/a/59935762
         AlertDialog.Builder(this)
             .setTitle("Quit")
             .setMessage("Are you sure you want to log out?")
