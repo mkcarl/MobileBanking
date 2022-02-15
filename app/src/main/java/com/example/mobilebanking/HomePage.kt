@@ -45,6 +45,7 @@ class HomePage : Fragment() {
         val myView = inflater.inflate(R.layout.fragment_home_page, container, false)
         val btnLogout:Button = myView.findViewById(R.id.button_homeLogOut)
         val recyclerNews : RecyclerView = myView.findViewById(R.id.recycle_homeNews)
+
         recyclerNews.setHasFixedSize(true)
         recyclerNews.setItemViewCacheSize(20)
         btnLogout.setOnClickListener {
