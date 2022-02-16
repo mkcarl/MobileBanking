@@ -22,9 +22,12 @@ class MainPage : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_page)
 
+        val username = intent.getStringExtra("username")
+        val password = intent.getStringExtra("password")
+
         // https://www.geeksforgeeks.org/bottom-navigation-bar-in-android/
         val nav = findViewById<BottomNavigationView>(R.id.bottomNavigation_mainNav)
-        val fragHomePage: HomePage = HomePage()
+        val fragHomePage: HomePage = HomePage().apply { arguments = Bundle().apply { putString("username", username) } }
         val fragFundTransfer: FundTransfer1 = FundTransfer1()
         val fragHistory: TransactionHistoryPage = TransactionHistoryPage()
         val fragPayBills: PayBillsPage = PayBillsPage()

@@ -68,6 +68,8 @@ class LoginPage : AppCompatActivity() {
                             Log.d(TAG, "signInWithEmail:success")
                             val user = auth.currentUser
                             val intent = Intent(this, MainPage::class.java)
+                            intent.putExtra("username", username)
+                            intent.putExtra("password", password)
                             startActivity(intent)
                             btnLogin.isEnabled = true
                         } else {
