@@ -60,6 +60,8 @@ class LoginPage : AppCompatActivity() {
                 txtPassword.editText?.text.toString().isNotEmpty()
             ){
                 btnLogin.isEnabled = false
+                Toast.makeText(baseContext, "Logging in...",
+                    Toast.LENGTH_SHORT).show()
                 auth = Firebase.auth
                 auth.signInWithEmailAndPassword("$username@maebank.com", password)
                     .addOnCompleteListener(this) { task ->
