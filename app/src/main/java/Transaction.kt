@@ -1,11 +1,14 @@
+import com.google.firebase.Timestamp
 import java.time.LocalDate
 import java.time.LocalTime
 
 data class Transaction(
 //    val date : LocalDate,
 //    val time : LocalTime,
-    val date : String,
-    val time : String,
-    val amount : Double
+    val sender : String,
+    val receiver : String,
+    val datetime : Timestamp,
+    val amount : Double,
+    val details : String
 ) {
 }

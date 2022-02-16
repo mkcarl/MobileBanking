@@ -7,6 +7,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mobilebanking.R
+import java.text.SimpleDateFormat
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 class TransactionAdapter(private val dataset : List<Transaction>) : RecyclerView.Adapter<TransactionAdapter.TransactionViewHolder>(){
 
@@ -24,8 +27,10 @@ class TransactionAdapter(private val dataset : List<Transaction>) : RecyclerView
 
     override fun onBindViewHolder(holder: TransactionViewHolder, position: Int) {
         val item = dataset[position]
-        holder.date.text = item.date
-        holder.time.text = item.time
+        val dateFormatter = SimpleDateFormat("dd/MM/yyyy")
+        val timeFormatter = SimpleDateFormat("HH:mm:ss")
+        holder.date.text = dateFormatter.format(item.datetime.toDate())
+        holder.time.text = timeFormatter.format(item.datetime.toDate())
         holder.amount.text = item.amount.toString()
     }
 

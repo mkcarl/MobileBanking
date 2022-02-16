@@ -29,7 +29,7 @@ class MainPage : AppCompatActivity() {
         val nav = findViewById<BottomNavigationView>(R.id.bottomNavigation_mainNav)
         val fragHomePage: HomePage = HomePage().apply { arguments = Bundle().apply { putString("username", username) } }
         val fragFundTransfer: FundTransfer1 = FundTransfer1()
-        val fragHistory: TransactionHistoryPage = TransactionHistoryPage()
+        val fragHistory: TransactionHistoryPage = TransactionHistoryPage().apply { arguments = Bundle().apply { putString("username", username) } }
         val fragPayBills: PayBillsPage = PayBillsPage()
         val fragLiveChat: LiveChatPage = LiveChatPage()
 

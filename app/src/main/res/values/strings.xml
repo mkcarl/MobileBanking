@@ -11,4 +11,5 @@
     <string name="home_welcome_user">Welcome %1$s</string>
     <string name="home_account_number">Account Number : %1$s</string>
     <string name="home_balance">Balance : RM %1$02d</string>
+    <string name="history_account_number">Account Number : %1$s</string>
 </resources>
