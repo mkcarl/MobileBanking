@@ -11,7 +11,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarMenuView
 
 class MainPage : AppCompatActivity() {
-
+    // TODO : switch to ViewModel for communication
+    // TODO : cache pages using fragment manager
     private fun setCurrentFragment(fragment:Fragment)=
         supportFragmentManager.beginTransaction().apply {
             replace(R.id.linear_main,fragment)

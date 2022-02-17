@@ -42,6 +42,10 @@ class FundTransfer3 : Fragment() {
         btnDone.setOnClickListener {
             val nav = activity?.findViewById<BottomNavigationView>(R.id.bottomNavigation_mainNav)
 //            nav?.menu?.findItem(R.id.menu_home)?.isChecked = true
+            for (i in 0 until nav?.menu?.size()!!){
+                nav.menu.getItem(i).isEnabled = true
+                nav.menu.getItem(i).isCheckable = true
+            }
             nav?.selectedItemId = R.id.menu_home
             nav?.performClick()
         }
