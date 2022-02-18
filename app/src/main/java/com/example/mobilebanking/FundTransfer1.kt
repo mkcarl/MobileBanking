@@ -15,8 +15,6 @@ import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 private const val TAG = "FundTransfer1"
@@ -26,7 +24,6 @@ private const val TAG = "FundTransfer1"
  * create an instance of this fragment.
  */
 class FundTransfer1 : Fragment() {
-    // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
     val db = Firebase.firestore
@@ -106,7 +103,6 @@ class FundTransfer1 : Fragment() {
          * @param param2 Parameter 2.
          * @return A new instance of fragment FundTransfer1.
          */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             FundTransfer1().apply {

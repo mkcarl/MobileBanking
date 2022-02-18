@@ -1,17 +1,19 @@
 package com.example.mobilebanking
 
+import MyViewModel
 import android.content.DialogInterface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarMenuView
 
+private const val TAG = "MainPage"
 class MainPage : AppCompatActivity() {
-    // TODO : switch to ViewModel for communication
     // TODO : cache pages using fragment manager
     private fun setCurrentFragment(fragment:Fragment)=
         supportFragmentManager.beginTransaction().apply {
@@ -24,15 +26,23 @@ class MainPage : AppCompatActivity() {
         setContentView(R.layout.activity_main_page)
 
         val username = intent.getStringExtra("username")
-        val password = intent.getStringExtra("password")
+        if (username != null) {
+            Log.d(TAG, username)
+        }
+
 
         // https://www.geeksforgeeks.org/bottom-navigation-bar-in-android/
         val nav = findViewById<BottomNavigationView>(R.id.bottomNavigation_mainNav)
-        val fragHomePage: HomePage = HomePage().apply { arguments = Bundle().apply { putString("username", username) } }
+        val fragHomePage: HomePage = HomePage()
         val fragFundTransfer: FundTransfer1 = FundTransfer1()
-        val fragHistory: TransactionHistoryPage = TransactionHistoryPage().apply { arguments = Bundle().apply { putString("username", username) } }
+        val fragHistory: TransactionHistoryPage = TransactionHistoryPage()
         val fragPayBills: PayBillsPage = PayBillsPage()
         val fragLiveChat: LiveChatPage = LiveChatPage()
+        val model: MyViewModel by viewModels()
+        intent.getStringExtra("username")?.let { model.setUsername(it) }
+        intent.getStringExtra("account_number")?.let { model.setAccountNumber(it) }
+        intent.getDoubleExtra("balance", -1.0).let { model.setBalance(it) }
+        intent.getStringExtra("account_number")?.let { Log.d(TAG, it) }
 
         setCurrentFragment(fragHomePage)
 
