@@ -12,6 +12,7 @@ class MyViewModel : ViewModel() {
     private val username = MutableLiveData<String>()
     private val accountNumber = MutableLiveData<String>()
     private val balance = MutableLiveData<Double>()
+    private val bankName = MutableLiveData<String>()
     private val db = Firebase.firestore
 
     fun setUsername(username : String){
@@ -26,6 +27,10 @@ class MyViewModel : ViewModel() {
         this.balance.value = bal
     }
 
+    fun setBankName(bankName : String){
+        this.bankName.value = bankName
+    }
+
     fun getUsername() : String? {
         return this.username.value
     }
@@ -34,6 +39,10 @@ class MyViewModel : ViewModel() {
     }
     fun getBalance() : Double? {
         return this.balance.value
+    }
+
+    fun getBankName() : String? {
+        return this.bankName.value
     }
 
     private val transactions : MutableLiveData<List<Transaction>> by lazy {

@@ -1,15 +1,21 @@
 package com.example.mobilebanking
 
+import MyViewModel
+import android.app.Activity
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.Toast
+import androidx.core.widget.doAfterTextChanged
+import androidx.core.widget.doOnTextChanged
+import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.firestore.ktx.firestore
@@ -26,7 +32,8 @@ private const val TAG = "FundTransfer1"
 class FundTransfer1 : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
-    val db = Firebase.firestore
+    private val db = Firebase.firestore
+    private val model : MyViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,39 +58,82 @@ class FundTransfer1 : Fragment() {
         var bankName : String? = null
 
         btnNext.setOnClickListener {
+            if (editBanks.editText?.text.isNullOrEmpty()){
+                editBanks.error = "Please choose a bank"
+            }
+            else {
+                editBanks.error = null
+                recipientAcc = editAccount.editText?.text.toString()
+                bankName = editBanks.editText?.text.toString()
 
-            Log.d(TAG, "bank name :  ${editBanks.editText?.text.toString()}")
-            Log.d(TAG, "Acc num :  ${editAccount.editText?.text.toString()}")
-            recipientAcc = editAccount.editText?.text.toString()
-            bankName = editBanks.editText?.text.toString()
+                db.collection("users")
+                    .whereEqualTo("account_number", editAccount.editText?.text.toString())
+                    .whereEqualTo("bank_name", editBanks.editText?.text.toString())
+                    .get()
+                    .addOnSuccessListener { users ->
 
-            db.collection("users")
-                .whereEqualTo("account_number", editAccount.editText?.text.toString())
-                .whereEqualTo("bank_name", editBanks.editText?.text.toString())
-                .get()
-                .addOnSuccessListener { users ->
-                    if (users.size() != 0){
-                        Log.d(TAG, "there is user")
-                        for (i in 0 until nav?.menu?.size()!!) {
-                            nav.menu.getItem(i).isEnabled = false
-                            nav.menu.getItem(i).isCheckable = false
-                        }
+                    }.addOnFailureListener { exception ->
+                        Log.w(TAG, "Error getting document", exception)
+                    }.addOnCompleteListener { task ->
+                        Log.d(TAG, "Query complete")
+                        if (task.isSuccessful){
+                            val users = task.result
+                            if (users != null) {
+                                if (users.size() != 0) {
+                                    Log.d(TAG, "there is user")
+                                    for (i in 0 until nav?.menu?.size()!!) {
+                                        nav.menu.getItem(i).isEnabled = false
+                                        nav.menu.getItem(i).isCheckable = false
+                                    }
 
-                        parentFragmentManager.beginTransaction().apply {
-                            replace(R.id.linear_main, FundTransfer2())
-                            commit()
+                                    val frag = FundTransfer2()
+                                    val bundle = Bundle()
+                                    bundle.putString("recipient_account", recipientAcc)
+                                    bundle.putString("bank_name", bankName)
+                                    frag.arguments = bundle
+                                    parentFragmentManager.beginTransaction().apply {
+                                        replace(R.id.linear_main, frag)
+                                        commit()
+                                    }
+                                } else {
+                                    Log.d(TAG, "There is none")
+                                    Toast.makeText(
+                                        context, "Account does not exist",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                }
+                            }
                         }
                     }
-                    else{
-                        Log.d(TAG, "There is none")
-                        Toast.makeText(context, "Account does not exist",
-                            Toast.LENGTH_LONG).show()
-                    }
-                }.addOnFailureListener{exception->
-                    Log.w(TAG, "Error getting document", exception)
-                }.addOnCompleteListener { _->
-                    Log.d(TAG, "Query complete")
+            }
+        }
+
+        editAccount.editText?.doAfterTextChanged {
+            Log.d(TAG, "Number of characters input : ${it?.count()}")
+            if (it?.count()!! < 9){
+                editAccount.editText?.error = "9 digit account number only!"
+                btnNext.isEnabled = false
+            } else {
+                editAccount.editText?.error = null
+                Log.d(TAG, "Model : ${model.getAccountNumber()}")
+                Log.d(TAG, "Edittext : ${editAccount.editText?.text.toString()}")
+                if (editAccount.editText?.text.toString() == model.getAccountNumber()){
+                    editAccount.editText?.error = "Cannot send to own account!"
+                    btnNext.isEnabled = false
                 }
+                else{
+                    btnNext.isEnabled = true
+
+                }
+
+            }
+        }
+
+        editBanks.editText?.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus){
+                val inputMethodManager = context?.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+                inputMethodManager.hideSoftInputFromWindow(v.windowToken, 0)
+            }
         }
 
         val banks = listOf<String>("Maybank", "Ambank", "CIMB Bank", "Bank Simpanan Nasional", "Bank of China", "HSBC Bank", "OCBC Bank")

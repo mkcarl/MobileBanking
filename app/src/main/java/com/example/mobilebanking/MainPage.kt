@@ -42,8 +42,7 @@ class MainPage : AppCompatActivity() {
         intent.getStringExtra("username")?.let { model.setUsername(it) }
         intent.getStringExtra("account_number")?.let { model.setAccountNumber(it) }
         intent.getDoubleExtra("balance", -1.0).let { model.setBalance(it) }
-        intent.getStringExtra("account_number")?.let { Log.d(TAG, it) }
-
+        intent.getStringExtra("bank_name")?.let { model.setBankName(it) }
         setCurrentFragment(fragHomePage)
 
         nav.setOnItemSelectedListener { item ->

@@ -85,6 +85,7 @@ class LoginPage : AppCompatActivity() {
                                                 if (user.data["username"] == username){
                                                     intent.putExtra("account_number", user.data["account_number"].toString())
                                                     intent.putExtra("balance", (user.data["balance"] as Long).toDouble())
+                                                    intent.putExtra("bank_name", user.data["bank_name"].toString())
                                                     Log.d(TAG, "acc num${user.data["account_number"].toString()}")
                                                     Log.d(TAG, "bal : ${(user.data["balance"] as Long).toDouble().toString()}")
                                                 }

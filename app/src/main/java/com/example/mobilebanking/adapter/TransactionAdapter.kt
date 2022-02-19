@@ -31,7 +31,7 @@ class TransactionAdapter(private val dataset : List<Transaction>) : RecyclerView
         val timeFormatter = SimpleDateFormat("HH:mm:ss")
         holder.date.text = dateFormatter.format(item.datetime.toDate())
         holder.time.text = timeFormatter.format(item.datetime.toDate())
-        holder.amount.text = item.amount.toString()
+        holder.amount.text = String.format("RM%.02f", item.amount)
     }
 
     override fun getItemCount(): Int {
