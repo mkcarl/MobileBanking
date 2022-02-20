@@ -134,6 +134,13 @@ class FundTransfer2 : Fragment() {
                     for (mapUser in involvedUsers) {
                         Log.d(TAG, "${mapUser.key} : ${mapUser.value.balance}")
                     }
+
+                    // write transaction history
+                    if (isSuccessfulTransfer) {
+                        db.collection("transactions")
+                            .add(transactionDetails)
+                    }
+                    // change user acc balance
                     db.collection("users/")
                         .get()
                         .addOnSuccessListener { users ->

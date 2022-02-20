@@ -2,6 +2,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.mobilebanking.entities.Transaction
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
@@ -16,6 +17,13 @@ class MyViewModel : ViewModel() {
         }
     }
     private val bankName = MutableLiveData<String>()
+    private val transactions : MutableLiveData<List<Transaction>> by lazy {
+        MutableLiveData<List<Transaction>>().also{
+            loadTransactionsFromFirestore(this.getAccountNumber()!!)
+        }
+    }
+
+
     private val db = Firebase.firestore
 
     fun setUsername(username : String){
@@ -49,18 +57,27 @@ class MyViewModel : ViewModel() {
         return this.bankName.value
     }
 
-    private val transactions : MutableLiveData<List<Transaction>> by lazy {
-        MutableLiveData<List<Transaction>>().also {
-            loadTransactions()
-        }
-    }
-
     fun getTransactions() : LiveData<List<Transaction>>{
-        return transactions
+        return this.transactions
     }
 
-    private fun loadTransactions(){
-        //TODO : load transaction from firebase
+    private fun loadTransactionsFromFirestore(accNum: String){
+        db.collection("transactions")
+            .addSnapshotListener{ t, e ->
+                if (e != null){
+                    Log.w(TAG, "Failed", e)
+                }
+
+                if (t != null){
+                    val allTransactions = mutableListOf<Transaction>()
+                    t.documents.forEach {
+                        if (it.getString("sender_acc") == accNum || it.getString("receiver_acc") == accNum){
+                            allTransactions.add(it.toObject(Transaction::class.java)!!)
+                        }
+                    }
+                    this.transactions.value = allTransactions.sortedBy { it.datetime }
+                }
+            }
     }
 
     private fun loadBalanceFromFirestore(accountNumber:String){

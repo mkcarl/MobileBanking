@@ -1,7 +1,7 @@
 package com.example.mobilebanking
 
 import MyViewModel
-import Transaction
+import com.example.mobilebanking.entities.Transaction
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -10,9 +10,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mobilebanking.adapter.TransactionAdapter
-import com.example.mobilebanking.data.TransactionDatasource
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -40,6 +40,8 @@ class TransactionHistoryPage : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+
+
     }
 
     override fun onCreateView(
@@ -47,58 +49,65 @@ class TransactionHistoryPage : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+        Log.d(TAG, "onCreateView called")
         val myView = inflater.inflate(R.layout.fragment_transaction_history_page, container, false)
         labelAccNum = myView.findViewById(R.id.text_historyAccNum)
         labelAccNum.text = getString(R.string.history_account_number, model.getAccountNumber())
+        val recyclerTransaction = myView.findViewById<RecyclerView>(R.id.recycle_historyHistory)
+
+        model.getTransactions().observe(viewLifecycleOwner, Observer{ tList ->
+            recyclerTransaction.adapter = TransactionAdapter(tList)
+            Log.d(TAG, "adapter set")
+        })
 
         val ls = mutableListOf<Transaction>()
         // receiving
-        db.collection("transactions")
-            .whereEqualTo("receiver_acc", model.getAccountNumber())
-            .get()
-            .addOnSuccessListener() { transactions ->
-                for (transaction in transactions) {
-                    ls.add(
-                        Transaction(
-                            receiver = model.getAccountNumber()!!,
-                            sender = transaction.data["sender_acc"] as String,
-                            datetime = transaction.data["datetime"] as Timestamp,
-                            amount = (transaction.data["amount"] as Long).toDouble(),
-                            details = transaction.data["details"] as String
-                        )
-                    )
-                }
-            }
-            .addOnFailureListener { exception ->
-                Log.w(TAG, "Error getting document", exception)
-            }
-            .addOnCompleteListener { _ ->
-                db.collection("transactions")
-                    .whereEqualTo("sender_acc", model.getAccountNumber())
-                    .get()
-                    .addOnSuccessListener { transactions ->
-                        for (transaction in transactions) {
-                            ls.add(
-                                Transaction(
-                                    sender = model.getAccountNumber()!!,
-                                    receiver = transaction.data["receiver_acc"] as String,
-                                    datetime = transaction.data["datetime"] as Timestamp,
-                                    amount = 0 - transaction.getDouble("balance")!!,
-                                    details = transaction.data["details"] as String
-                                )
-                            )
-                        }
-                    }
-                    .addOnFailureListener { exception ->
-                        Log.w(TAG, "Error getting document", exception)
-                    }
-                    .addOnCompleteListener { _ ->
-                        ls.sortBy { it.datetime }
-                        val recyclerTransaction =
-                            myView.findViewById<RecyclerView>(R.id.recycle_historyHistory)
-                        recyclerTransaction.adapter = TransactionAdapter(ls)
-                    }
-            }
+//        db.collection("transactions")
+//            .whereEqualTo("receiver_acc", model.getAccountNumber())
+//            .get()
+//            .addOnSuccessListener() { transactions ->
+//                for (transaction in transactions) {
+//                    ls.add(
+//                        Transaction(
+//                            receiver = model.getAccountNumber()!!,
+//                            sender = transaction.data["sender_acc"] as String,
+//                            datetime = transaction.data["datetime"] as Timestamp,
+//                            amount = transaction.getDouble("balance")!!,
+//                            details = transaction.data["details"] as String
+//                        )
+//                    )
+//                }
+//            }
+//            .addOnFailureListener { exception ->
+//                Log.w(TAG, "Error getting document", exception)
+//            }
+//            .addOnCompleteListener { _ ->
+//                db.collection("transactions")
+//                    .whereEqualTo("sender_acc", model.getAccountNumber())
+//                    .get()
+//                    .addOnSuccessListener { transactions ->
+//                        for (transaction in transactions) {
+//                            ls.add(
+//                                Transaction(
+//                                    sender = model.getAccountNumber()!!,
+//                                    receiver = transaction.data["receiver_acc"] as String,
+//                                    datetime = transaction.data["datetime"] as Timestamp,
+//                                    amount = 0 - transaction.getDouble("balance")!!,
+//                                    details = transaction.data["details"] as String
+//                                )
+//                            )
+//                        }
+//                    }
+//                    .addOnFailureListener { exception ->
+//                        Log.w(TAG, "Error getting document", exception)
+//                    }
+//                    .addOnCompleteListener { _ ->
+//                        ls.sortBy { it.datetime }
+//                        val recyclerTransaction =
+//                            myView.findViewById<RecyclerView>(R.id.recycle_historyHistory)
+//                        recyclerTransaction.adapter = TransactionAdapter(ls)
+//                    }
+//            }
 
 
         return myView
