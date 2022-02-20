@@ -109,7 +109,7 @@ class FundTransfer2 : Fragment() {
                 "sender_acc" to model.getAccountNumber()
             )
 
-            val sendAmount : Long = editAmount.editText?.text.toString().toLong()
+            val sendAmount : Double = editAmount.editText?.text.toString().toDouble()
             Log.d(TAG, "send amount : $sendAmount")
 
             val allUsers = mutableMapOf<String, User>()
