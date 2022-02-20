@@ -1,6 +1,6 @@
 package com.example.mobilebanking.data
 
-import com.example.mobilebanking.News
+import com.example.mobilebanking.entities.News
 
 class NewsDatasource {
 

@@ -8,7 +8,7 @@
     tools:context=".FundTransfer3">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/img_transfer3TransferIcon"
         android:layout_width="220dp"
         android:layout_height="150dp"
         android:src="@drawable/icon_done_transfer"
@@ -20,15 +20,15 @@
         app:layout_constraintVertical_bias="0.06" />
 
     <TextView
-        android:id="@+id/text_transfer3TransferSuccess"
+        android:id="@+id/text_transfer3TransferStatus"
         style="@style/TextAppearance.Material3.HeadlineLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Successfully transferred RM500 to 123-123-123"
+        android:text="@string/transfer3_transfer_success"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintTop_toBottomOf="@+id/img_transfer3TransferIcon" />
 
     <Button
         android:id="@+id/button_transfer3Pdf"
@@ -52,7 +52,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_transfer3TransferSuccess"
+        app:layout_constraintTop_toBottomOf="@+id/text_transfer3TransferStatus"
         app:layout_constraintVertical_bias="0.097" />
 
     <Button

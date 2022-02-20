@@ -1,4 +1,4 @@
-package com.example.mobilebanking
+package com.example.mobilebanking.entities
 
 data class News(
     val title:String,

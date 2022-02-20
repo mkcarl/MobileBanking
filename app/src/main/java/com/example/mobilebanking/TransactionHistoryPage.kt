@@ -83,7 +83,7 @@ class TransactionHistoryPage : Fragment() {
                                     sender = model.getAccountNumber()!!,
                                     receiver = transaction.data["receiver_acc"] as String,
                                     datetime = transaction.data["datetime"] as Timestamp,
-                                    amount = 0 - (transaction.data["amount"] as Long).toDouble(),
+                                    amount = 0 - transaction.getDouble("balance")!!,
                                     details = transaction.data["details"] as String
                                 )
                             )

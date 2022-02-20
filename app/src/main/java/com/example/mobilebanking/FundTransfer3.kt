@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -37,6 +39,9 @@ class FundTransfer3 : Fragment() {
         val myView = inflater.inflate(R.layout.fragment_fund_transfer3, container, false)
         val mainView = inflater.inflate(R.layout.activity_main_page, container, false)
         val btnDone: Button = myView.findViewById(R.id.button_transfer3Done)
+        val btnPDF : Button = myView.findViewById(R.id.button_transfer3Pdf)
+        val btnFav : Button = myView.findViewById(R.id.button_transfer3Favourite)
+
         btnDone.setOnClickListener {
             val nav = activity?.findViewById<BottomNavigationView>(R.id.bottomNavigation_mainNav)
 //            nav?.menu?.findItem(R.id.menu_home)?.isChecked = true
@@ -44,9 +49,34 @@ class FundTransfer3 : Fragment() {
                 nav.menu.getItem(i).isEnabled = true
                 nav.menu.getItem(i).isCheckable = true
             }
-            nav?.selectedItemId = R.id.menu_home
-            nav?.performClick()
+            nav.selectedItemId = R.id.menu_home
+            nav.performClick()
         }
+
+        val imgIcon = myView.findViewById<ImageView>(R.id.img_transfer3TransferIcon)
+        val txtStatus = myView.findViewById<TextView>(R.id.text_transfer3TransferStatus)
+
+        if (requireArguments().getBoolean("transfer_success")){
+            imgIcon.setImageResource(R.drawable.icon_done_transfer)
+            txtStatus.text = getString(
+                R.string.transfer3_transfer_success,
+                requireArguments().getDouble("amount"),
+                requireArguments().getString("account_number")
+            )
+        }
+        else {
+            imgIcon.setImageResource(R.drawable.icon_fail_transfer)
+            txtStatus.text = getString(
+                R.string.transfer3_transfer_fail,
+                requireArguments().getDouble("amount"),
+                requireArguments().getString("account_number")
+            )
+            btnFav.visibility = View.INVISIBLE
+            btnPDF.visibility = View.INVISIBLE
+
+        }
+
+
         return myView
     }
 
