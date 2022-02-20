@@ -13,6 +13,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mobilebanking.adapter.NewsAdapter
 import com.example.mobilebanking.data.NewsDatasource
@@ -44,8 +45,10 @@ class HomePage : Fragment() {
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
-
         }
+        model.getBalance().observe(this, Observer<Double>{ bal ->
+            labelBalance.text = getString(R.string.home_balance, bal)
+        })
     }
 
     override fun onCreateView(
@@ -87,26 +90,30 @@ class HomePage : Fragment() {
 
         labelWelcome.text = getString(R.string.home_welcome_user, model.getUsername())
         labelAccNum.text = getString(R.string.home_account_number, model.getAccountNumber())
-        labelBalance.text = getString(R.string.home_balance, model.getBalance())
 
         return myView
     }
 
     override fun onResume() {
         super.onResume()
-        db.collection("users")
-            .get()
-            .addOnSuccessListener { users ->
-                for (user in users){
-                    if (user.data["username"] == labelBalance){
-                        labelAccNum.text = getString(R.string.home_account_number, user.data["account_number"])
-                        labelBalance.text = getString(R.string.home_balance, user.data["balance"] as Long)
-                    }
-                }
-            }
-            .addOnFailureListener{exception->
-                Log.w(TAG, "Error getting document", exception)
-            }
+        Log.d(TAG, "onResume called")
+
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d(TAG, "onPause called")
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Log.d(TAG, "onDestroyView called")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d(TAG, "onDestroy called")
+
     }
 
     companion object {

@@ -56,7 +56,6 @@ class FundTransfer2 : Fragment() {
 
 
         txtTransfer.text = getString(R.string.transfer2_transferring_to, arguments?.getString("recipient_account"), arguments?.getString("bank_name"))
-        txtBalance.text = getString(R.string.transfer2_current_balance, model.getBalance())
         btnSend.isEnabled = false
         btnOTP.isEnabled = false
 

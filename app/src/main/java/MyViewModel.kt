@@ -2,7 +2,6 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.mobilebanking.R
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
@@ -11,7 +10,11 @@ private const val TAG = "MyViewModel"
 class MyViewModel : ViewModel() {
     private val username = MutableLiveData<String>()
     private val accountNumber = MutableLiveData<String>()
-    private val balance = MutableLiveData<Double>()
+    private val balance : MutableLiveData<Double> by lazy {
+        MutableLiveData<Double>().also {
+            loadBalanceFromFirestore(this.getAccountNumber()!!)
+        }
+    }
     private val bankName = MutableLiveData<String>()
     private val db = Firebase.firestore
 
@@ -37,8 +40,9 @@ class MyViewModel : ViewModel() {
     fun getAccountNumber() : String? {
         return this.accountNumber.value
     }
-    fun getBalance() : Double? {
-        return this.balance.value
+
+    fun getBalance() : LiveData<Double> {
+        return this.balance
     }
 
     fun getBankName() : String? {
@@ -57,6 +61,16 @@ class MyViewModel : ViewModel() {
 
     private fun loadTransactions(){
         //TODO : load transaction from firebase
+    }
+
+    private fun loadBalanceFromFirestore(accountNumber:String){
+        db.collection("users")
+            .whereEqualTo("account_number", accountNumber)
+            .addSnapshotListener { users, e ->
+                users?.documents?.forEach {
+                    this.balance.value = it.getDouble("balance")
+                }
+            }
     }
 
 }
