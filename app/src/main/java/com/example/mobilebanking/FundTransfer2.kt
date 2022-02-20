@@ -12,6 +12,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import com.example.mobilebanking.entities.User
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.Timestamp
@@ -56,20 +57,35 @@ class FundTransfer2 : Fragment() {
 
 
         txtTransfer.text = getString(R.string.transfer2_transferring_to, arguments?.getString("recipient_account"), arguments?.getString("bank_name"))
+        model.getBalance().observe(viewLifecycleOwner, Observer<Double>{ bal ->
+            txtBalance.text = getString(R.string.transfer2_current_balance, bal)
+        })
+
         btnSend.isEnabled = false
         btnOTP.isEnabled = false
 
 
+
         editAmount.editText?.doAfterTextChanged {
-            val regex = """\d+""".toRegex()
-            if (! regex.matches(editAmount.editText?.text.toString())){
-                editAmount.editText?.error = "Invalid amount"
-                btnOTP.isEnabled = false
+            if (!editAmount.editText?.text.isNullOrEmpty()) {
+                val sendAmount: Double = editAmount.editText!!.text.toString().toDouble()
+                val regex = """^\d+\.?\d{1,2}${'$'}|^\d+${'$'}""".toRegex()
+                if (!regex.matches(editAmount.editText?.text.toString())) {
+                    editAmount.editText?.error = "Invalid amount"
+                    btnOTP.isEnabled = false
+                    editOTP.editText!!.isEnabled = false
+
+                } else if (model.getBalance().value!! - sendAmount < 0) {
+                    btnOTP.isEnabled = false
+                    editAmount.editText!!.error = "Insufficient balance!"
+                    editOTP.editText!!.isEnabled = false
+                } else {
+                    btnOTP.isEnabled = true
+                    editAmount.editText?.error = null
+                    editOTP.editText!!.isEnabled = true
+                }
             }
-            else {
-                btnOTP.isEnabled = true
-                editAmount.editText?.error = null
-            }
+
         }
 
         editOTP.editText?.doAfterTextChanged {

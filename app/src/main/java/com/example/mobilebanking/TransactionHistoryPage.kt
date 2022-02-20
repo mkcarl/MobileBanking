@@ -31,7 +31,6 @@ class TransactionHistoryPage : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
     val db = Firebase.firestore
-    private lateinit var labelAccNum : TextView
     private val model : MyViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,7 +50,7 @@ class TransactionHistoryPage : Fragment() {
         // Inflate the layout for this fragment
         Log.d(TAG, "onCreateView called")
         val myView = inflater.inflate(R.layout.fragment_transaction_history_page, container, false)
-        labelAccNum = myView.findViewById(R.id.text_historyAccNum)
+        val labelAccNum : TextView = myView.findViewById(R.id.text_historyAccNum)
         labelAccNum.text = getString(R.string.history_account_number, model.getAccountNumber())
         val recyclerTransaction = myView.findViewById<RecyclerView>(R.id.recycle_historyHistory)
 
@@ -59,57 +58,6 @@ class TransactionHistoryPage : Fragment() {
             recyclerTransaction.adapter = TransactionAdapter(tList)
             Log.d(TAG, "adapter set")
         })
-
-        val ls = mutableListOf<Transaction>()
-        // receiving
-//        db.collection("transactions")
-//            .whereEqualTo("receiver_acc", model.getAccountNumber())
-//            .get()
-//            .addOnSuccessListener() { transactions ->
-//                for (transaction in transactions) {
-//                    ls.add(
-//                        Transaction(
-//                            receiver = model.getAccountNumber()!!,
-//                            sender = transaction.data["sender_acc"] as String,
-//                            datetime = transaction.data["datetime"] as Timestamp,
-//                            amount = transaction.getDouble("balance")!!,
-//                            details = transaction.data["details"] as String
-//                        )
-//                    )
-//                }
-//            }
-//            .addOnFailureListener { exception ->
-//                Log.w(TAG, "Error getting document", exception)
-//            }
-//            .addOnCompleteListener { _ ->
-//                db.collection("transactions")
-//                    .whereEqualTo("sender_acc", model.getAccountNumber())
-//                    .get()
-//                    .addOnSuccessListener { transactions ->
-//                        for (transaction in transactions) {
-//                            ls.add(
-//                                Transaction(
-//                                    sender = model.getAccountNumber()!!,
-//                                    receiver = transaction.data["receiver_acc"] as String,
-//                                    datetime = transaction.data["datetime"] as Timestamp,
-//                                    amount = 0 - transaction.getDouble("balance")!!,
-//                                    details = transaction.data["details"] as String
-//                                )
-//                            )
-//                        }
-//                    }
-//                    .addOnFailureListener { exception ->
-//                        Log.w(TAG, "Error getting document", exception)
-//                    }
-//                    .addOnCompleteListener { _ ->
-//                        ls.sortBy { it.datetime }
-//                        val recyclerTransaction =
-//                            myView.findViewById<RecyclerView>(R.id.recycle_historyHistory)
-//                        recyclerTransaction.adapter = TransactionAdapter(ls)
-//                    }
-//            }
-
-
         return myView
     }
 

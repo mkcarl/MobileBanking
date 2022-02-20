@@ -12,7 +12,7 @@
     <string name="home_balance">Balance : RM %1$.02f</string>
     <string name="history_account_number">Account Number : %1$s</string>
     <string name="transfer2_transferring_to">Transferring to \n%1$s \n(%2$s)</string>
-    <string name="transfer2_current_balance">Current balance : %1$.02f</string>
-    <string name="transfer3_transfer_success">Successfully transferred RM%1$.02f to %2$s</string>
-    <string name="transfer3_transfer_fail">Failed to transfer RM%1$.02f to %2$s</string>
+    <string name="transfer2_current_balance">Current balance : RM %1$.02f</string>
+    <string name="transfer3_transfer_success">Successfully transferred \nRM %1$.02f \nto \n%2$s</string>
+    <string name="transfer3_transfer_fail">Failed to transfer \nRM %1$.02f \nto \n%2$s</string>
 </resources>
