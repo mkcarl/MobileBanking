@@ -70,7 +70,7 @@ class FundTransfer2 : Fragment() {
             if (!editAmount.editText?.text.isNullOrEmpty()) {
                 val sendAmount: Double = editAmount.editText!!.text.toString().toDouble()
                 val regex = """^\d+\.?\d{1,2}${'$'}|^\d+${'$'}""".toRegex()
-                if (!regex.matches(editAmount.editText?.text.toString())) {
+                if (!regex.matches(editAmount.editText?.text.toString()) || sendAmount == 0.0) {
                     editAmount.editText?.error = "Invalid amount"
                     btnOTP.isEnabled = false
                     editOTP.editText!!.isEnabled = false
