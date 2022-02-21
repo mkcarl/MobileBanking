@@ -17,9 +17,21 @@ class MyViewModel : ViewModel() {
         }
     }
     private val bankName = MutableLiveData<String>()
-    private val transactions : MutableLiveData<List<Transaction>> by lazy {
+    @Deprecated("initial test, it just loads all transactions")
+    val allTransactions : MutableLiveData<List<Transaction>> by lazy {
         MutableLiveData<List<Transaction>>().also{
             loadTransactionsFromFirestore(this.getAccountNumber()!!)
+        }
+    }
+    private val sentTransactions : MutableLiveData<List<Transaction>> by lazy {
+        MutableLiveData<List<Transaction>>().also{
+            loadSentTransactionsFromFirestore(this.getAccountNumber()!!)
+        }
+    }
+
+    private val receivedTransactions : MutableLiveData<List<Transaction>> by lazy {
+        MutableLiveData<List<Transaction>>().also{
+            loadReceivedTransactionsFromFirestore(this.getAccountNumber()!!)
         }
     }
 
@@ -57,10 +69,20 @@ class MyViewModel : ViewModel() {
         return this.bankName.value
     }
 
+    @Deprecated("initial test, it just loads all transactions")
     fun getTransactions() : LiveData<List<Transaction>>{
-        return this.transactions
+        return this.allTransactions
     }
 
+    fun getSentTransactions() : LiveData<List<Transaction>>{
+        return this.sentTransactions
+    }
+
+    fun getReceivedTransactions() : LiveData<List<Transaction>>{
+        return this.receivedTransactions
+    }
+
+    @Deprecated("initial test, it just loads all transactions")
     private fun loadTransactionsFromFirestore(accNum: String){
         db.collection("transactions")
             .addSnapshotListener{ t, e ->
@@ -75,7 +97,45 @@ class MyViewModel : ViewModel() {
                             allTransactions.add(it.toObject(Transaction::class.java)!!)
                         }
                     }
-                    this.transactions.value = allTransactions.sortedBy { it.datetime }
+                    this.allTransactions.value = allTransactions.sortedByDescending { it.datetime }
+                }
+            }
+    }
+
+    private fun loadSentTransactionsFromFirestore(accNum: String){
+        db.collection("transactions")
+            .addSnapshotListener{ t, e ->
+                if (e != null){
+                    Log.w(TAG, "Failed", e)
+                }
+
+                if (t != null){
+                    val allTransactions = mutableListOf<Transaction>()
+                    t.documents.forEach {
+                        if (it.getString("sender_acc") == accNum){
+                            allTransactions.add(it.toObject(Transaction::class.java)!!)
+                        }
+                    }
+                    this.sentTransactions.value = allTransactions.sortedByDescending { it.datetime }
+                }
+            }
+    }
+
+    private fun loadReceivedTransactionsFromFirestore(accNum: String){
+        db.collection("transactions")
+            .addSnapshotListener{ t, e ->
+                if (e != null){
+                    Log.w(TAG, "Failed", e)
+                }
+
+                if (t != null){
+                    val allTransactions = mutableListOf<Transaction>()
+                    t.documents.forEach {
+                        if (it.getString("receiver_acc") == accNum){
+                            allTransactions.add(it.toObject(Transaction::class.java)!!)
+                        }
+                    }
+                    this.receivedTransactions.value = allTransactions.sortedByDescending { it.datetime }
                 }
             }
     }
