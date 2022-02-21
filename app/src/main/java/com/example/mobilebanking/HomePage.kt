@@ -77,6 +77,7 @@ class HomePage : Fragment() {
                     dialog.dismiss()
                     // for sending data to previous activity use
                     // setResult(response code, data)
+                    Firebase.auth.signOut()
                     activity?.finish()
                 }
                 .setNegativeButton("No") {
