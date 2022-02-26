@@ -36,6 +36,7 @@ class FundTransfer2 : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d(TAG, model.getReceivedUser().value.toString())
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
@@ -112,85 +113,22 @@ class FundTransfer2 : Fragment() {
             val sendAmount : Double = editAmount.editText?.text.toString().toDouble()
             Log.d(TAG, "send amount : $sendAmount")
 
-            val allUsers = mutableMapOf<String, User>()
+            model.getUser().value!!.balance -= sendAmount
+            model.getReceivedUser().value!!.balance += sendAmount
 
-            db.collection("users")
-                .get()
-                .addOnSuccessListener { users ->
-                    for (user in users.documents){
-                        allUsers[user["account_number"].toString()] = user.toObject(User::class.java)!!
-                    }
-                }
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        Log.d(TAG, "Successfully queried users")
-                        Log.d(TAG, allUsers.toString())
-
-                        for (user in allUsers) {
-                            // sender
-                            if (user.value.account_number == model.getUser().value!!.account_number) {
-                                user.value.balance -= sendAmount
-                            }
-                            // receiver
-                            if (user.value.account_number == arguments?.getString("recipient_account")) {
-                                user.value.balance += sendAmount
-                            }
-                        }
-                    }
-                    else {
-                        isSuccessfulTransfer = false
-                    }
-                    val involvedUsers = allUsers.filter {
-                        it.value.account_number in listOf<String>(
-                            model.getUser().value!!.account_number,
-                            requireArguments().getString("recipient_account")!!
-                        )
-                    }
-
-                    for (mapUser in involvedUsers) {
-                        Log.d(TAG, "${mapUser.key} : ${mapUser.value.balance}")
-                    }
-
-                    // write transaction history
-                    if (isSuccessfulTransfer) {
-                        db.collection("transactions")
-                            .add(transactionDetails)
-                    }
-                    // change user acc balance
-                    db.collection("users/")
-                        .get()
-                        .addOnSuccessListener { users ->
-                            if (isSuccessfulTransfer) {
-                                for (fsUser in users) {
-                                    if (fsUser["account_number"].toString()
-                                        in involvedUsers.map { it.value.account_number }
-                                    ) {
-                                        fsUser.reference.update(
-                                            mapOf(
-                                                "balance" to involvedUsers[fsUser["account_number"]]!!.balance
-                                            )
-                                        )
-                                    }
-                                }
-                            }
-                        }
-                        .addOnCompleteListener { task ->
-                                val frag = FundTransfer3()
-                                val bundle = Bundle()
-                                bundle.putBoolean("transfer_success", isSuccessfulTransfer)
-                                bundle.putDouble("amount", editAmount.editText?.text.toString().toDouble())
-                                bundle.putString("account_number", arguments?.getString("recipient_account"))
-                                frag.arguments = bundle
-                                parentFragmentManager.beginTransaction().apply {
-                                    replace(R.id.linear_main, frag)
-                                    commit()
-                                }
-                            }
-
-                }
-
-
-
+            if (isSuccessfulTransfer) {
+                model.updateUser()
+            }
+            val frag = FundTransfer3()
+            val bundle = Bundle()
+            bundle.putBoolean("transfer_success", isSuccessfulTransfer)
+            bundle.putDouble("amount", editAmount.editText?.text.toString().toDouble())
+            bundle.putString("account_number", arguments?.getString("recipient_account"))
+            frag.arguments = bundle
+            parentFragmentManager.beginTransaction().apply {
+                replace(R.id.linear_main, frag)
+                commit()
+            }
         }
 
         return myView

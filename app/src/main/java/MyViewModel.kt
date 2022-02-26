@@ -1,7 +1,11 @@
+import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.mobilebanking.FundTransfer2
+import com.example.mobilebanking.R
 import com.example.mobilebanking.entities.Transaction
 import com.example.mobilebanking.entities.User
 import com.google.firebase.firestore.ktx.firestore
@@ -10,7 +14,11 @@ import com.google.firebase.ktx.Firebase
 private const val TAG = "MyViewModel"
 
 class MyViewModel : ViewModel() {
+    private val db = Firebase.firestore
+
     private val user = MutableLiveData<User>()
+    private val receiverUser : MutableLiveData<User?> = MutableLiveData<User?>()
+
 
     @Deprecated("initial test, it just loads all transactions")
     val allTransactions : MutableLiveData<List<Transaction>> by lazy {
@@ -37,8 +45,6 @@ class MyViewModel : ViewModel() {
     }
 
 
-    private val db = Firebase.firestore
-
     fun loadUser(username: String) : LiveData<User?> {
         db.collection("users")
             .whereEqualTo("username", username)
@@ -51,6 +57,50 @@ class MyViewModel : ViewModel() {
     }
 
     fun getUser() : LiveData<User> = user
+
+    fun loadReceiverUser(accNum: String, bankName : String){
+        db.collection("users")
+            .whereEqualTo("account_number", accNum)
+            .whereEqualTo("bank_name", bankName)
+            .get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful && task.result != null){
+                    if (task.result!!.documents.isNotEmpty()) {
+                        val user = task.result!!.documents[0]
+                        receiverUser.value = user.toObject(User::class.java)
+                    }
+                }
+            }
+    }
+
+    fun getReceivedUser() : LiveData<User?> = receiverUser
+    fun clearReceivedUser() {
+        receiverUser.value = null
+    }
+
+    // update user in firestore
+    fun updateUser(){
+        val allUser = mutableListOf<User>()
+        db.collection("users")
+            .get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful){
+                    task.result!!.documents.forEach { userDocument ->
+                        if (userDocument.get("account_number") == this.user.value!!.account_number){
+                            userDocument.reference.update(
+                                mapOf("balance" to this.user.value!!.balance)
+                            )
+                        } else if (userDocument.get("account_number") == this.receiverUser.value!!.account_number){
+                            userDocument.reference.update(
+                                mapOf("balance" to this.receiverUser.value!!.balance)
+                            )
+                        }
+                    }
+                    this.receiverUser.value = null
+                }
+            }
+
+    }
 
 
     @Deprecated("initial test, it just loads all transactions")

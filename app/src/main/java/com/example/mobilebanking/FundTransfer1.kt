@@ -63,48 +63,30 @@ class FundTransfer1 : Fragment() {
             }
             else {
                 editBanks.error = null
-                recipientAcc = editAccount.editText?.text.toString()
-                bankName = editBanks.editText?.text.toString()
+                recipientAcc = editAccount.editText!!.text.toString()
+                bankName = editBanks.editText!!.text.toString()
 
-                db.collection("users")
-                    .whereEqualTo("account_number", editAccount.editText?.text.toString())
-                    .whereEqualTo("bank_name", editBanks.editText?.text.toString())
-                    .get()
-                    .addOnSuccessListener { users ->
-
-                    }.addOnFailureListener { exception ->
-                        Log.w(TAG, "Error getting document", exception)
-                    }.addOnCompleteListener { task ->
-                        Log.d(TAG, "Query complete")
-                        if (task.isSuccessful){
-                            val users = task.result
-                            if (users != null) {
-                                if (users.size() != 0) {
-                                    Log.d(TAG, "there is user")
-                                    for (i in 0 until nav?.menu?.size()!!) {
-                                        nav.menu.getItem(i).isEnabled = false
-                                        nav.menu.getItem(i).isCheckable = false
-                                    }
-
-                                    val frag = FundTransfer2()
-                                    val bundle = Bundle()
-                                    bundle.putString("recipient_account", recipientAcc)
-                                    bundle.putString("bank_name", bankName)
-                                    frag.arguments = bundle
-                                    parentFragmentManager.beginTransaction().apply {
-                                        replace(R.id.linear_main, frag)
-                                        commit()
-                                    }
-                                } else {
-                                    Log.d(TAG, "There is none")
-                                    Toast.makeText(
-                                        context, "Account does not exist",
-                                        Toast.LENGTH_LONG
-                                    ).show()
-                                }
-                            }
-                        }
+                if (model.getReceivedUser().value == null){
+                    Toast.makeText(
+                        context, "Account does not exist",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+                else {
+                    for (i in 0 until nav?.menu?.size()!!) {
+                        nav.menu.getItem(i).isEnabled = false
+                        nav.menu.getItem(i).isCheckable = false
                     }
+                    val frag = FundTransfer2()
+                    val bundle = Bundle()
+                    bundle.putString("recipient_account", recipientAcc)
+                    bundle.putString("bank_name", bankName)
+                    frag.arguments = bundle
+                    parentFragmentManager.beginTransaction().apply {
+                        replace(R.id.linear_main, frag)
+                        commit()
+                    }
+                }
             }
         }
 
@@ -138,6 +120,12 @@ class FundTransfer1 : Fragment() {
                 val inputMethodManager = context?.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
                 inputMethodManager.hideSoftInputFromWindow(v.windowToken, 0)
             }
+        }
+
+        editBanks.editText?.doAfterTextChanged {
+            recipientAcc = editAccount.editText!!.text.toString()
+            bankName = editBanks.editText!!.text.toString()
+            model.loadReceiverUser(recipientAcc!!,bankName!!)
         }
 
         val banks = listOf<String>("Maybank", "Ambank", "CIMB Bank", "Bank Simpanan Nasional", "Bank of China", "HSBC Bank", "OCBC Bank")
