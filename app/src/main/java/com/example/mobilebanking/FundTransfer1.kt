@@ -115,16 +115,20 @@ class FundTransfer1 : Fragment() {
                 btnNext.isEnabled = false
             } else {
                 editAccount.editText?.error = null
-                Log.d(TAG, "Model : ${model.getAccountNumber()}")
-                Log.d(TAG, "Edittext : ${editAccount.editText?.text.toString()}")
-                if (editAccount.editText?.text.toString() == model.getAccountNumber()){
-                    editAccount.editText?.error = "Cannot send to own account!"
-                    btnNext.isEnabled = false
-                }
-                else{
-                    btnNext.isEnabled = true
+//                Log.d(TAG, "Model : ${model.getUser().value.account_number}")
+//                Log.d(TAG, "Edittext : ${editAccount.editText?.text.toString()}")
+                if (model.getUser().value != null){
+                    if (editAccount.editText?.text.toString() == model.getUser().value!!.account_number){
+                        editAccount.editText?.error = "Cannot send to own account!"
+                        btnNext.isEnabled = false
+                    }
+                    else{
+                        Log.d(TAG, "else")
+                        btnNext.isEnabled = true
 
+                    }
                 }
+
 
             }
         }

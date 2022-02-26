@@ -38,7 +38,6 @@ class HomePage : Fragment() {
     private lateinit var labelWelcome : TextView
     private lateinit var labelBalance : TextView
     private lateinit var labelAccNum : TextView
-    private val db = Firebase.firestore
     private val model : MyViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,8 +46,10 @@ class HomePage : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
-        model.getBalance().observe(this, Observer<Double>{ bal ->
-            labelBalance.text = getString(R.string.home_balance, bal)
+        model.getUser().observe(this, Observer {
+            labelBalance.text = getString(R.string.home_balance, it.balance)
+            labelWelcome.text = getString(R.string.home_welcome_user, it.username)
+            labelAccNum.text = getString(R.string.home_account_number, it.account_number)
         })
     }
 
@@ -89,9 +90,6 @@ class HomePage : Fragment() {
 
         val news = NewsDatasource().loadNews()
         recyclerNews.adapter = NewsAdapter(news)
-
-        labelWelcome.text = getString(R.string.home_welcome_user, model.getUsername())
-        labelAccNum.text = getString(R.string.home_account_number, model.getAccountNumber())
 
         return myView
     }

@@ -71,39 +71,17 @@ class LoginPage : AppCompatActivity() {
                         if (task.isSuccessful) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success")
-                            val user = auth.currentUser
                             val intent = Intent(this, MainPage::class.java)
                             intent.putExtra("username", username)
-                            db.collection("users")
-                                .whereEqualTo("username", username)
-                                .get()
-                                .addOnCompleteListener { task ->
-                                    if (task.isSuccessful){
-                                        val users = task.result
-                                        if (users != null) {
-                                            for (user in users){
-                                                if (user.data["username"] == username){
-                                                    intent.putExtra("account_number", user.data["account_number"].toString())
-                                                    intent.putExtra("balance", user.getDouble("balance"))
-                                                    intent.putExtra("bank_name", user.data["bank_name"].toString())
-                                                    Log.d(TAG, "acc num${user.data["account_number"].toString()}")
-                                                    Log.d(TAG, "bal : ${user.getDouble("balance")}")
-                                                }
-                                        startActivity(intent)
-                                        btnLogin.isEnabled = true
-                                            }
-                                        }
-                                    }
-                                }
-
-
-                        } else {
-                            btnLogin.isEnabled = true
+                            startActivity(intent)
+                        }
+                        else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.exception)
                             Toast.makeText(baseContext, "Authentication failed.",
                                 Toast.LENGTH_SHORT).show()
                         }
+                        btnLogin.isEnabled = true
                     }
 
             }

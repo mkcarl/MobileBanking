@@ -32,7 +32,6 @@ private const val TAG = "TransactionHistoryPage"
 class TransactionHistoryPage : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
-    val db = Firebase.firestore
     private val model : MyViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,7 +56,7 @@ class TransactionHistoryPage : Fragment() {
         pager.adapter = TransactionPagerAdapter(requireActivity(), tabLayout.tabCount)
         TabLayoutMediator(tabLayout, pager){ _,_ -> } .attach()
         val labelAccNum : TextView = myView.findViewById(R.id.text_historyAccNum)
-        labelAccNum.text = getString(R.string.history_account_number, model.getAccountNumber())
+        labelAccNum.text = getString(R.string.history_account_number, model.getUser().value!!.account_number)
 
         return myView
     }

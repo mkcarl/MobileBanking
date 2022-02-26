@@ -57,8 +57,8 @@ class FundTransfer2 : Fragment() {
 
 
         txtTransfer.text = getString(R.string.transfer2_transferring_to, arguments?.getString("recipient_account"), arguments?.getString("bank_name"))
-        model.getBalance().observe(viewLifecycleOwner, Observer<Double>{ bal ->
-            txtBalance.text = getString(R.string.transfer2_current_balance, bal)
+        model.getUser().observe(viewLifecycleOwner, Observer {
+            txtBalance.text = getString(R.string.transfer2_current_balance, it.balance)
         })
 
         btnSend.isEnabled = false
@@ -75,7 +75,7 @@ class FundTransfer2 : Fragment() {
                     btnOTP.isEnabled = false
                     editOTP.editText!!.isEnabled = false
 
-                } else if (model.getBalance().value!! - sendAmount < 0) {
+                } else if (model.getUser().value!!.balance - sendAmount < 0) {
                     btnOTP.isEnabled = false
                     editAmount.editText!!.error = "Insufficient balance!"
                     editOTP.editText!!.isEnabled = false
@@ -106,7 +106,7 @@ class FundTransfer2 : Fragment() {
                 "datetime" to Timestamp.now(),
                 "details" to "transfer",
                 "receiver_acc" to arguments?.getString("recipient_account"),
-                "sender_acc" to model.getAccountNumber()
+                "sender_acc" to model.getUser().value!!.account_number
             )
 
             val sendAmount : Double = editAmount.editText?.text.toString().toDouble()
@@ -128,7 +128,7 @@ class FundTransfer2 : Fragment() {
 
                         for (user in allUsers) {
                             // sender
-                            if (user.value.account_number == model.getAccountNumber()) {
+                            if (user.value.account_number == model.getUser().value!!.account_number) {
                                 user.value.balance -= sendAmount
                             }
                             // receiver
@@ -142,7 +142,7 @@ class FundTransfer2 : Fragment() {
                     }
                     val involvedUsers = allUsers.filter {
                         it.value.account_number in listOf<String>(
-                            model.getAccountNumber()!!,
+                            model.getUser().value!!.account_number,
                             requireArguments().getString("recipient_account")!!
                         )
                     }

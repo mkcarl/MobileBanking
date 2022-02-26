@@ -9,23 +9,26 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.Observer
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarMenuView
 
 private const val TAG = "MainPage"
 class MainPage : AppCompatActivity() {
-    // TODO : cache pages using fragment manager
-    private fun setCurrentFragment(fragment:Fragment)=
+
+    private fun setCurrentFragment(fragment:Fragment) {
         supportFragmentManager.beginTransaction().apply {
-            replace(R.id.linear_main,fragment)
+            replace(R.id.linear_main, fragment)
             commit()
         }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_page)
 
         val username = intent.getStringExtra("username")
+
         if (username != null) {
             Log.d(TAG, username)
         }
@@ -39,10 +42,12 @@ class MainPage : AppCompatActivity() {
         val fragPayBills: PayBillsPage = PayBillsPage()
         val fragLiveChat: LiveChatPage = LiveChatPage()
         val model: MyViewModel by viewModels()
-        intent.getStringExtra("username")?.let { model.setUsername(it) }
-        intent.getStringExtra("account_number")?.let { model.setAccountNumber(it) }
-        intent.getDoubleExtra("balance", -1.0).let { model.setBalance(it) }
-        intent.getStringExtra("bank_name")?.let { model.setBankName(it) }
+
+        if (username != null) {
+            model.loadUser(username).observe(this, Observer {
+                Log.d(TAG, it.toString())
+            })
+        }
         setCurrentFragment(fragHomePage)
 
         nav.setOnItemSelectedListener { item ->

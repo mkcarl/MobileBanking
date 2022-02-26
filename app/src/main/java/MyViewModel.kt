@@ -3,71 +3,55 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.mobilebanking.entities.Transaction
+import com.example.mobilebanking.entities.User
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 private const val TAG = "MyViewModel"
 
 class MyViewModel : ViewModel() {
-    private val username = MutableLiveData<String>()
-    private val accountNumber = MutableLiveData<String>()
-    private val balance : MutableLiveData<Double> by lazy {
-        MutableLiveData<Double>().also {
-            loadBalanceFromFirestore(this.getAccountNumber()!!)
-        }
-    }
-    private val bankName = MutableLiveData<String>()
+    private val user = MutableLiveData<User>()
+
     @Deprecated("initial test, it just loads all transactions")
     val allTransactions : MutableLiveData<List<Transaction>> by lazy {
         MutableLiveData<List<Transaction>>().also{
-            loadTransactionsFromFirestore(this.getAccountNumber()!!)
+            if (this.user.value != null) {
+                loadTransactionsFromFirestore(this.user.value!!.account_number)
+            }
         }
     }
     private val sentTransactions : MutableLiveData<List<Transaction>> by lazy {
         MutableLiveData<List<Transaction>>().also{
-            loadSentTransactionsFromFirestore(this.getAccountNumber()!!)
+            if (this.user.value != null) {
+                loadSentTransactionsFromFirestore(this.user.value!!.account_number)
+            }
         }
     }
 
     private val receivedTransactions : MutableLiveData<List<Transaction>> by lazy {
         MutableLiveData<List<Transaction>>().also{
-            loadReceivedTransactionsFromFirestore(this.getAccountNumber()!!)
+            if (this.user.value != null) {
+                loadReceivedTransactionsFromFirestore(this.user.value!!.account_number)
+            }
         }
     }
 
 
     private val db = Firebase.firestore
 
-    fun setUsername(username : String){
-        this.username.value = username
+    fun loadUser(username: String) : LiveData<User?> {
+        db.collection("users")
+            .whereEqualTo("username", username)
+            .addSnapshotListener{ data, e ->
+                if (data != null){
+                    user.value = data.documents[0].toObject(User::class.java)
+                }
+            }
+        return user
     }
 
-    fun setAccountNumber(accNum : String){
-        this.accountNumber.value = accNum
-    }
+    fun getUser() : LiveData<User> = user
 
-    fun setBalance(bal : Double){
-        this.balance.value = bal
-    }
-
-    fun setBankName(bankName : String){
-        this.bankName.value = bankName
-    }
-
-    fun getUsername() : String? {
-        return this.username.value
-    }
-    fun getAccountNumber() : String? {
-        return this.accountNumber.value
-    }
-
-    fun getBalance() : LiveData<Double> {
-        return this.balance
-    }
-
-    fun getBankName() : String? {
-        return this.bankName.value
-    }
 
     @Deprecated("initial test, it just loads all transactions")
     fun getTransactions() : LiveData<List<Transaction>>{
@@ -140,14 +124,5 @@ class MyViewModel : ViewModel() {
             }
     }
 
-    private fun loadBalanceFromFirestore(accountNumber:String){
-        db.collection("users")
-            .whereEqualTo("account_number", accountNumber)
-            .addSnapshotListener { users, e ->
-                users?.documents?.forEach {
-                    this.balance.value = it.getDouble("balance")
-                }
-            }
-    }
 
 }
