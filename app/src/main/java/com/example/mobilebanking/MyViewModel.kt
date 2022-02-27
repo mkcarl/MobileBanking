@@ -1,11 +1,9 @@
-import android.os.Bundle
+package com.example.mobilebanking
+
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.mobilebanking.FundTransfer2
-import com.example.mobilebanking.R
 import com.example.mobilebanking.entities.Transaction
 import com.example.mobilebanking.entities.User
 import com.google.firebase.firestore.ktx.firestore

@@ -1,7 +1,5 @@
 package com.example.mobilebanking.entities
 
-import com.google.firebase.ktx.Firebase
-
 data class User(
     var account_number : String = "",
     var balance : Double = 0.0,

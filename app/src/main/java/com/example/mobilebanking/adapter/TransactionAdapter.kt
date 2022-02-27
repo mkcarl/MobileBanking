@@ -1,12 +1,12 @@
 package com.example.mobilebanking.adapter
 
-import com.example.mobilebanking.entities.Transaction
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mobilebanking.R
+import com.example.mobilebanking.entities.Transaction
 import java.text.SimpleDateFormat
 
 class TransactionAdapter(private val dataset : List<Transaction>) : RecyclerView.Adapter<TransactionAdapter.TransactionViewHolder>(){

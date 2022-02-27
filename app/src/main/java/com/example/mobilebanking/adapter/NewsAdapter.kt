@@ -6,8 +6,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.mobilebanking.entities.News
 import com.example.mobilebanking.R
+import com.example.mobilebanking.entities.News
 import com.squareup.picasso.Picasso
 
 class NewsAdapter(private val dataset : List<News>) : RecyclerView.Adapter<NewsAdapter.NewsViewHolder>(){

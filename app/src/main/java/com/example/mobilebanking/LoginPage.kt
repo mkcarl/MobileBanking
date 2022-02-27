@@ -1,21 +1,14 @@
 package com.example.mobilebanking
 
-import MyViewModel
-import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.method.PasswordTransformationMethod
 import android.util.Log
 import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
-import androidx.activity.viewModels
-import androidx.core.view.isEmpty
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
-import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
