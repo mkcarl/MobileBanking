@@ -14,6 +14,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import com.example.mobilebanking.entities.Transaction
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.io.File
@@ -54,10 +55,12 @@ class FundTransfer3 : Fragment() {
         val btnDone: Button = myView.findViewById(R.id.button_transfer3Done)
         val btnPDF : Button = myView.findViewById(R.id.button_transfer3Pdf)
         val btnFav : Button = myView.findViewById(R.id.button_transfer3Favourite)
+        val model : MyViewModel by activityViewModels()
 
         btnDone.setOnClickListener {
             val nav = activity?.findViewById<BottomNavigationView>(R.id.bottomNavigation_mainNav)
 //            nav?.menu?.findItem(R.id.menu_home)?.isChecked = true
+            model.clearReceivedUser()
             for (i in 0 until nav?.menu?.size()!!){
                 nav.menu.getItem(i).isEnabled = true
                 nav.menu.getItem(i).isCheckable = true
