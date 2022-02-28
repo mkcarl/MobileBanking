@@ -100,6 +100,11 @@ class MyViewModel : ViewModel() {
 
     }
 
+    fun uploadTransaction(t:Transaction){
+        db.collection("transactions")
+            .add(t)
+    }
+
 
     @Deprecated("initial test, it just loads all transactions")
     fun getTransactions() : LiveData<List<Transaction>>{

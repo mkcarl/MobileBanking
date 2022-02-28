@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:autoText="false"
             android:imeOptions="actionDone"
-            android:inputType="textNoSuggestions"
+            android:inputType="textNoSuggestions|textPassword"
             android:singleLine="true" />
     </com.google.android.material.textfield.TextInputLayout>
 

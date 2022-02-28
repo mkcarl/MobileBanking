@@ -12,6 +12,7 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import com.example.mobilebanking.entities.Transaction
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.ktx.firestore
@@ -62,27 +63,34 @@ class FundTransfer2 : Fragment() {
 
         btnSend.isEnabled = false
         btnOTP.isEnabled = false
+        editOTP.editText!!.isEnabled = false
 
 
 
         editAmount.editText?.doAfterTextChanged {
             if (!editAmount.editText?.text.isNullOrEmpty()) {
-                val sendAmount: Double = editAmount.editText!!.text.toString().toDouble()
                 val regex = """^\d+\.?\d{1,2}${'$'}|^\d+${'$'}""".toRegex()
-                if (!regex.matches(editAmount.editText?.text.toString()) || sendAmount == 0.0) {
+                if (!regex.matches(editAmount.editText?.text.toString())) {
                     editAmount.editText?.error = "Invalid amount"
                     btnOTP.isEnabled = false
-                    editOTP.editText!!.isEnabled = false
 
-                } else if (model.getUser().value!!.balance - sendAmount < 0) {
-                    btnOTP.isEnabled = false
-                    editAmount.editText!!.error = "Insufficient balance!"
-                    editOTP.editText!!.isEnabled = false
                 } else {
-                    btnOTP.isEnabled = true
-                    editAmount.editText?.error = null
-                    editOTP.editText!!.isEnabled = true
+                    val sendAmount: Double = editAmount.editText!!.text.toString().toDouble()
+                    if (sendAmount <= 0){
+                        btnOTP.isEnabled = false
+                        editAmount.editText!!.error = "Invalid amount"
+                    }
+                    else if (model.getUser().value!!.balance - sendAmount < 0) {
+                        btnOTP.isEnabled = false
+                        editAmount.editText!!.error = "Insufficient balance!"
+                    } else {
+                        btnOTP.isEnabled = true
+                        editAmount.editText?.error = null
+                    }
                 }
+
+
+
             }
 
         }
@@ -93,6 +101,8 @@ class FundTransfer2 : Fragment() {
 
         btnOTP.setOnClickListener {
             editAmount.editText?.isEnabled = false
+            editOTP.editText!!.isEnabled = true
+            btnOTP.isEnabled = false
             Toast.makeText(context, "OTP is 000111",
                 Toast.LENGTH_LONG).show()
         }
@@ -100,13 +110,13 @@ class FundTransfer2 : Fragment() {
         btnSend.setOnClickListener {
             var isSuccessfulTransfer = editOTP.editText?.text.toString() == "000111"
 
-            val transactionDetails = hashMapOf(
-                "amount" to editAmount.editText?.text.toString().toDouble(),
-                "datetime" to Timestamp.now(),
-                "details" to "transfer",
-                "receiver_acc" to arguments?.getString("recipient_account"),
-                "sender_acc" to model.getUser().value!!.account_number
-            )
+            val transaction = Transaction(
+                editAmount.editText?.text.toString().toDouble(),
+                Timestamp.now(),
+                "transfer",
+                model.getReceivedUser().value!!.account_number,
+                model.getUser().value!!.account_number
+                )
 
             val sendAmount : Double = editAmount.editText?.text.toString().toDouble()
             Log.d(TAG, "send amount : $sendAmount")
@@ -116,12 +126,14 @@ class FundTransfer2 : Fragment() {
 
             if (isSuccessfulTransfer) {
                 model.updateUser()
+                model.uploadTransaction(transaction)
             }
             val frag = FundTransfer3()
             val bundle = Bundle()
             bundle.putBoolean("transfer_success", isSuccessfulTransfer)
             bundle.putDouble("amount", editAmount.editText?.text.toString().toDouble())
             bundle.putString("account_number", arguments?.getString("recipient_account"))
+            bundle.putParcelable("transaction", transaction)
             frag.arguments = bundle
             parentFragmentManager.beginTransaction().apply {
                 replace(R.id.linear_main, frag)

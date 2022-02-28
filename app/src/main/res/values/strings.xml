@@ -15,4 +15,8 @@
     <string name="transfer2_current_balance">Current balance : RM %1$.02f</string>
     <string name="transfer3_transfer_success">Successfully transferred \nRM %1$.02f \nto \n%2$s</string>
     <string name="transfer3_transfer_fail">Failed to transfer \nRM %1$.02f \nto \n%2$s</string>
+    <string name="PDFTEMPLATE_date">Transaction Date\t: %1$s</string>
+    <string name="PDFTEMPLATE_sender">Sender account\t: %1$s</string>
+    <string name="PDFTEMPLATE_receiver">Receiver account\t: %1$s</string>
+    <string name="PDFTEMPLATE_amount">Amount\t\t\t: RM%1$.02f</string>
 </resources>
