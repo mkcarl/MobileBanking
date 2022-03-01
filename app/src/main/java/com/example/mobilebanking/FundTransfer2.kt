@@ -121,10 +121,10 @@ class FundTransfer2 : Fragment() {
             val sendAmount : Double = editAmount.editText?.text.toString().toDouble()
             Log.d(TAG, "send amount : $sendAmount")
 
-            model.getUser().value!!.balance -= sendAmount
-            model.getReceivedUser().value!!.balance += sendAmount
 
             if (isSuccessfulTransfer) {
+                model.getUser().value!!.balance -= sendAmount
+                model.getReceivedUser().value!!.balance += sendAmount
                 model.updateUser()
                 model.uploadTransaction(transaction)
             }
