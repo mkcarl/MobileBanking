@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -42,9 +43,18 @@ class ReceiverHistory : Fragment() {
         val myView  = inflater.inflate(R.layout.fragment_receiver_history, container, false)
 
         val recyclerTransaction = myView.findViewById<RecyclerView>(R.id.recycle_receiverHistory)
+        val txtNotFound = myView.findViewById<TextView>(R.id.text_receiverNoTransaction)
 
         model.getReceivedTransactions().observe(viewLifecycleOwner, Observer{ tList ->
-            recyclerTransaction.adapter = TransactionAdapter(tList)
+            if (tList.isEmpty()){
+                txtNotFound.visibility = View.VISIBLE
+                recyclerTransaction.visibility = View.INVISIBLE
+            }else {
+                txtNotFound.visibility = View.INVISIBLE
+                recyclerTransaction.visibility = View.VISIBLE
+                recyclerTransaction.adapter = TransactionAdapter(tList)
+
+            }
         })
 
         return myView
